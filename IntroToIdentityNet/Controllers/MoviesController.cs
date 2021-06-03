@@ -5,29 +5,29 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using IntroToIdentityNet;
 using IntroToIdentityNet.Data;
-using IntroToIdentityNet.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace IntroToIdentityNet.Controllers
 {
     [Authorize]
-    public class AnimalsController : Controller
+    public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AnimalsController(ApplicationDbContext context)
+        public MoviesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Animals
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Animal.ToListAsync());
+            return View(await _context.Movie.ToListAsync());
         }
 
-        // GET: Animals/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,39 +35,39 @@ namespace IntroToIdentityNet.Controllers
                 return NotFound();
             }
 
-            var animal = await _context.Animal
+            var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (animal == null)
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(animal);
+            return View(movie);
         }
 
-        // GET: Animals/Create
+        // GET: Movies/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Animals/Create
+        // POST: Movies/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Species")] Animal animal)
+        public async Task<IActionResult> Create([Bind("Id,Name,Rating,Description,Genre")] Movie movie)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(animal);
+                _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(animal);
+            return View(movie);
         }
 
-        // GET: Animals/Edit/5
+        // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +75,22 @@ namespace IntroToIdentityNet.Controllers
                 return NotFound();
             }
 
-            var animal = await _context.Animal.FindAsync(id);
-            if (animal == null)
+            var movie = await _context.Movie.FindAsync(id);
+            if (movie == null)
             {
                 return NotFound();
             }
-            return View(animal);
+            return View(movie);
         }
 
-        // POST: Animals/Edit/5
+        // POST: Movies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Species")] Animal animal)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rating,Description,Genre")] Movie movie)
         {
-            if (id != animal.Id)
+            if (id != movie.Id)
             {
                 return NotFound();
             }
@@ -99,12 +99,12 @@ namespace IntroToIdentityNet.Controllers
             {
                 try
                 {
-                    _context.Update(animal);
+                    _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnimalExists(animal.Id))
+                    if (!MovieExists(movie.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +115,10 @@ namespace IntroToIdentityNet.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(animal);
+            return View(movie);
         }
 
-        // GET: Animals/Delete/5
+        // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,30 +126,30 @@ namespace IntroToIdentityNet.Controllers
                 return NotFound();
             }
 
-            var animal = await _context.Animal
+            var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (animal == null)
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(animal);
+            return View(movie);
         }
 
-        // POST: Animals/Delete/5
+        // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var animal = await _context.Animal.FindAsync(id);
-            _context.Animal.Remove(animal);
+            var movie = await _context.Movie.FindAsync(id);
+            _context.Movie.Remove(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AnimalExists(int id)
+        private bool MovieExists(int id)
         {
-            return _context.Animal.Any(e => e.Id == id);
+            return _context.Movie.Any(e => e.Id == id);
         }
     }
 }

@@ -35,6 +35,10 @@
                 <input asp-for="Input.DateOfBirth" class="form-control" />
                 <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                @{int age = (int)((DateTime.Now - Model.Input.DateOfBirth).TotalDays / 365.25); }
+                <p>You are @age years old</p>
+            </div>
 
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>
